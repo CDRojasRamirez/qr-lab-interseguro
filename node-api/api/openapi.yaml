@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  title: Analytics API (Node)
+  version: 1.0.0
+  description: Matrix statistics (max, min, average, sum, diagonal detection). Bearer JWT RS256 issued by the Go API.
+servers:
+  - url: http://localhost:3000
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      operationId: health
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status: { type: string, const: ok }
+  /api/v1/statistics:
+    post:
+      summary: Compute statistics for a set of named matrices
+      operationId: computeStatistics
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StatisticsRequest' }
+            example:
+              matrices:
+                - { name: Q, values: [[1, 0], [0, 1]] }
+                - { name: R, values: [[2, 1], [0, 3]] }
+      responses:
+        '200':
+          description: Global and per-matrix statistics
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StatisticsResponse' }
+              example:
+                global: { max: 3, min: 0, average: 1, sum: 8, count: 8 }
+                perMatrix:
+                  - { name: Q, max: 1, min: 0, average: 0.5, sum: 2, count: 4, isDiagonal: true }
+                  - { name: R, max: 3, min: 0, average: 1.5, sum: 6, count: 4, isDiagonal: false }
+                anyDiagonal: true
+        '400':
+          description: INVALID_MATRIX (empty, ragged, oversize, duplicate names) or VALIDATION_ERROR (malformed body)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              example:
+                error:
+                  code: INVALID_MATRIX
+                  message: Matrix "A" is not rectangular at row 1
+                  details: []
+        '401':
+          description: UNAUTHORIZED - missing, invalid or expired token
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '413':
+          description: PAYLOAD_TOO_LARGE - body exceeds the size limit
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '500':
+          description: INTERNAL_ERROR
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Matrix:
+      type: object
+      required: [name, values]
+      properties:
+        name: { type: string, minLength: 1 }
+        values:
+          type: array
+          description: Rectangular matrix, up to 100 x 100, finite numbers only
+          items:
+            type: array
+            items: { type: number }
+    StatisticsRequest:
+      type: object
+      required: [matrices]
+      properties:
+        matrices:
+          type: array
+          minItems: 1
+          items: { $ref: '#/components/schemas/Matrix' }
+    Stats:
+      type: object
+      required: [max, min, average, sum, count]
+      properties:
+        max: { type: number }
+        min: { type: number }
+        average: { type: number }
+        sum: { type: number }
+        count: { type: integer }
+    MatrixStats:
+      allOf:
+        - $ref: '#/components/schemas/Stats'
+        - type: object
+          required: [name, isDiagonal]
+          properties:
+            name: { type: string }
+            isDiagonal: { type: boolean }
+    StatisticsResponse:
+      type: object
+      required: [global, perMatrix, anyDiagonal]
+      properties:
+        global: { $ref: '#/components/schemas/Stats' }
+        perMatrix:
+          type: array
+          items: { $ref: '#/components/schemas/MatrixStats' }
+        anyDiagonal: { type: boolean }
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code:
+              type: string
+              enum: [INVALID_MATRIX, VALIDATION_ERROR, UNAUTHORIZED, NOT_FOUND, PAYLOAD_TOO_LARGE, INTERNAL_ERROR]
+            message: { type: string }
+            details:
+              type: array
+              items: { type: string }

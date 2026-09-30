@@ -1,0 +1,80 @@
+<form class="card card--static" (submit)="$event.preventDefault(); submit()" novalidate>
+  <header class="card-head">
+    <span class="card-chip"><lucide-icon [img]="icons.Grid3x3" [size]="16" /></span>
+    <div class="card-titles">
+      <h2 class="card-title">Matriz de entrada</h2>
+      <span class="card-hint">Hasta 10×10 · cualquier forma rectangular</span>
+    </div>
+    <span class="chip card-actions">{{ rows() }}×{{ cols() }}</span>
+  </header>
+
+  <div class="toolbar">
+    <div class="dims">
+      <div class="field">
+        <label class="micro-label" for="rows">Filas</label>
+        <select id="rows" class="select num" [disabled]="disabled()" (change)="setRows($event)">
+          @for (n of sizes; track n) {
+            <option [value]="n" [selected]="n === rows()">{{ n }}</option>
+          }
+        </select>
+      </div>
+      <span class="times" aria-hidden="true">×</span>
+      <div class="field">
+        <label class="micro-label" for="cols">Columnas</label>
+        <select id="cols" class="select num" [disabled]="disabled()" (change)="setCols($event)">
+          @for (n of sizes; track n) {
+            <option [value]="n" [selected]="n === cols()">{{ n }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary btn-sm" type="button" [disabled]="disabled()" (click)="loadExample()">
+        <lucide-icon [img]="icons.Sparkles" [size]="14" /> Ejemplo
+      </button>
+      <button class="btn btn-secondary btn-sm" type="button" [disabled]="disabled()" (click)="randomize()">
+        <lucide-icon [img]="icons.Shuffle" [size]="14" /> Aleatoria
+      </button>
+      <button class="btn btn-ghost btn-sm" type="button" [disabled]="disabled()" (click)="clear()">
+        <lucide-icon [img]="icons.Eraser" [size]="14" /> Limpiar
+      </button>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="grid" role="group" aria-label="Celdas de la matriz" [style.--cols]="cols()">
+      @for (row of cells(); track $index; let i = $index) {
+        @for (cell of row; track $index; let j = $index) {
+          <input
+            class="cell input num"
+            type="number"
+            step="any"
+            inputmode="decimal"
+            [class.diag]="i === j"
+            [value]="cell"
+            [disabled]="disabled()"
+            [attr.aria-label]="'Fila ' + (i + 1) + ', columna ' + (j + 1)"
+            [attr.aria-invalid]="parsed()[i][j] === null"
+            (input)="setCell(i, j, $event)"
+          />
+        }
+      }
+    </div>
+  </div>
+
+  @if (!valid()) {
+    <p class="field-error" role="alert">
+      <lucide-icon [img]="icons.CircleAlert" [size]="14" />
+      Todas las celdas deben ser números finitos.
+    </p>
+  }
+
+  <button class="btn btn-primary submit" type="submit" [disabled]="disabled() || !valid()">
+    @if (disabled()) {
+      <lucide-icon [class.spin]="true" [img]="icons.Loader" [size]="16" /> Calculando…
+    } @else {
+      <lucide-icon [img]="icons.Play" [size]="16" /> Calcular QR
+    }
+  </button>
+</form>

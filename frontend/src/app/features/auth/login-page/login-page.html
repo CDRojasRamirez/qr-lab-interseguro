@@ -1,0 +1,22 @@
+<div class="auth">
+  <app-login-hero class="hero-col" [apisOnline]="apisOnline()" />
+
+  <main class="form-side">
+    <p class="mobile-brand" aria-hidden="true">QR <span>LAB</span></p>
+    <div class="center animate-slide-up">
+      <h2>Iniciar sesión</h2>
+      <p class="lead">Ingresa con tu usuario para factorizar matrices y ver sus estadísticas.</p>
+      <app-login-form
+        [loading]="loading()"
+        [error]="error()"
+        [demoCredentials]="demoCredentials()"
+        (credentials)="login($event)"
+      />
+    </div>
+
+    <footer class="legal-row">
+      <span>© {{ year }} QR Lab · Desafío técnico Interseguro</span>
+      <span class="num">JWT · RS256</span>
+    </footer>
+  </main>
+</div>

@@ -1,0 +1,47 @@
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+  outline: none;
+}
+
+.content {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  animation: rd-fade-in 200ms var(--ease-out) both;
+}
+
+@media (min-width: 1024px) {
+  .shell {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .main {
+    padding: 24px;
+  }
+
+  .backdrop {
+    display: none;
+  }
+}

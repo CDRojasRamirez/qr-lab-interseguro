@@ -1,0 +1,9 @@
+// Global design system ("Financial Calm"). Component-specific rules live next to each component.
+@use 'styles/tokens';
+@use 'styles/base';
+@use 'styles/utilities';
+@use 'styles/buttons';
+@use 'styles/forms';
+@use 'styles/cards';
+@use 'styles/table';
+@use 'styles/feedback';

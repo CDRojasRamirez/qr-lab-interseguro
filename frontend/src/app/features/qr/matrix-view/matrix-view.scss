@@ -1,0 +1,65 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.scroll {
+  overflow-x: auto;
+  padding: 2px 0 4px;
+}
+
+// Square brackets drawn with the wrapper's side borders.
+.bracket {
+  position: relative;
+  display: inline-block;
+  min-width: 100%;
+  padding: 6px 14px;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    border: 1.5px solid var(--color-text-3);
+  }
+
+  &::before {
+    left: 0;
+    border-right: 0;
+    border-radius: 3px 0 0 3px;
+  }
+
+  &::after {
+    right: 0;
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-size: 12.5px;
+}
+
+td {
+  padding: 6px 10px;
+  border-radius: var(--radius-xs);
+  text-align: right;
+  white-space: nowrap;
+  color: var(--color-text-1);
+}
+
+td.neg {
+  color: var(--color-text-2);
+}
+
+td.diag {
+  background: color-mix(in oklab, var(--color-accent) 14%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-accent) 30%, transparent);
+  color: var(--color-text-0);
+  font-weight: 700;
+}

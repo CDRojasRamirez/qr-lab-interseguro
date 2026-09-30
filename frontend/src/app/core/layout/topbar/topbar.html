@@ -1,0 +1,43 @@
+<header class="topbar">
+  <button
+    class="btn btn-icon menu"
+    type="button"
+    aria-label="Abrir menú"
+    aria-controls="app-sidebar"
+    [attr.aria-expanded]="menuOpen()"
+    (click)="openMenu.emit()"
+  >
+    <lucide-icon [img]="icons.Menu" [size]="18" />
+  </button>
+
+  <nav class="crumbs" aria-label="Ruta de navegación">
+    <span class="crumb-root">QR Lab</span>
+    <span class="sep" aria-hidden="true">/</span>
+    <span class="crumb-current" aria-current="page">Factorización</span>
+  </nav>
+
+  <span class="spacer"></span>
+
+  <ul class="pills" aria-label="Estado en vivo de las APIs">
+    @for (s of statuses(); track s.name) {
+      <li class="api-pill" [class.ok]="s.status === 'ok'" [class.down]="s.status === 'down'">
+        <span class="dot" [class.ok]="s.status === 'ok'" [class.down]="s.status === 'down'"></span>
+        <span class="name">{{ shortName(s.name) }}</span>
+        <span class="num ms">{{ s.latencyMs !== null ? s.latencyMs + ' ms' : 'caída' }}</span>
+      </li>
+    }
+  </ul>
+
+  <button
+    class="btn btn-icon"
+    type="button"
+    [attr.aria-label]="theme() === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'"
+    (click)="toggleTheme.emit()"
+  >
+    <lucide-icon [img]="theme() === 'dark' ? icons.Sun : icons.Moon" [size]="16" />
+  </button>
+
+  <span class="avatar" role="img" [attr.aria-label]="'Usuario ' + user()">
+    {{ user().charAt(0).toUpperCase() }}
+  </span>
+</header>

@@ -1,0 +1,81 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.password {
+  position: relative;
+
+  .input {
+    padding-right: 44px;
+  }
+}
+
+.eye {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-2);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    color 150ms var(--ease-out),
+    background-color 150ms var(--ease-out);
+
+  &:hover {
+    background: var(--color-bg-3);
+    color: var(--color-text-0);
+  }
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px dashed color-mix(in oklab, var(--color-accent) 40%, var(--color-line));
+  border-radius: var(--radius-md, 10px);
+  background: color-mix(in oklab, var(--color-accent) 6%, var(--color-bg-2));
+}
+
+.demo-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--color-accent);
+}
+
+.demo-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+
+  div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  dt {
+    color: var(--color-text-2);
+    font-size: 12px;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 13px;
+    color: var(--color-text-0);
+  }
+}

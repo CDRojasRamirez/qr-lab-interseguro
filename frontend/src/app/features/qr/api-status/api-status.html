@@ -1,0 +1,41 @@
+<section class="card" aria-labelledby="api-status-title">
+  <header class="card-head">
+    <span class="card-chip"><lucide-icon [img]="icons.Activity" [size]="16" /></span>
+    <div class="card-titles">
+      <h3 id="api-status-title" class="card-title">Estado de APIs</h3>
+      <span class="card-hint">Chequeo de <span class="num">/health</span> con latencia</span>
+    </div>
+    <button
+      class="btn btn-secondary btn-sm card-actions"
+      type="button"
+      [disabled]="loading()"
+      (click)="refresh.emit()"
+    >
+      <lucide-icon [class.spin]="loading()" [img]="icons.RefreshCw" [size]="14" />
+      {{ loading() ? 'Consultando…' : 'Actualizar' }}
+    </button>
+  </header>
+
+  @if (statuses().length === 0) {
+    <p class="placeholder muted">Sin datos todavía.</p>
+  } @else {
+    <ul class="services">
+      @for (s of statuses(); track s.name) {
+        <li>
+          <span class="service">
+            <lucide-icon [img]="icons.Server" [size]="16" />
+            {{ s.name }}
+          </span>
+          <span
+            class="badge"
+            [class.badge-success]="s.status === 'ok'"
+            [class.badge-danger]="s.status === 'down'"
+          >
+            {{ s.status === 'ok' ? 'En línea' : 'Caída' }}
+          </span>
+          <span class="latency num">{{ s.latencyMs !== null ? s.latencyMs + ' ms' : '—' }}</span>
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -1,0 +1,33 @@
+<section class="kpis" aria-label="Estadísticas globales">
+  @for (card of cards(); track card.label) {
+    <article class="kpi">
+      <span class="kpi-head">
+        <span class="kpi-chip"><lucide-icon [img]="card.icon" [size]="14" /></span>
+        {{ card.label }}
+      </span>
+      @if (loading()) {
+        <span class="skeleton value-skeleton" aria-hidden="true"></span>
+      } @else {
+        <span class="kpi-value num" [attr.title]="card.value">
+          {{ card.value === null ? '—' : (card.value | number: '1.0-4') }}
+        </span>
+      }
+    </article>
+  }
+
+  <article class="kpi">
+    <span class="kpi-head">
+      <span class="kpi-chip"><lucide-icon [img]="icons.Triangle" [size]="14" /></span>
+      ¿Diagonal?
+    </span>
+    @if (loading()) {
+      <span class="skeleton value-skeleton" aria-hidden="true"></span>
+    } @else if (stats() === null) {
+      <span class="badge">Sin datos</span>
+    } @else if (diagonal()) {
+      <span class="badge badge-success">Sí · {{ diagonal() }}</span>
+    } @else {
+      <span class="badge">Ninguna</span>
+    }
+  </article>
+</section>

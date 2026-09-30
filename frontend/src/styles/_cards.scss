@@ -1,0 +1,129 @@
+// Zone cards and KPI cards.
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft-sm);
+  background:
+    radial-gradient(
+      480px 220px at 50% -30%,
+      color-mix(in oklab, var(--color-accent) 8%, transparent),
+      transparent 70%
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-bg-1),
+      color-mix(in oklab, var(--color-bg-0) 55%, var(--color-bg-1))
+    );
+  transition:
+    transform 200ms var(--ease-out),
+    border-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+  animation: rd-slide-up 280ms var(--ease-out) both;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in oklab, var(--color-accent) 25%, var(--color-line));
+    box-shadow: var(--shadow-soft-md);
+  }
+}
+
+// Form cards: no lift while typing.
+.card--static:hover {
+  transform: none;
+  border-color: var(--color-line);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.card-chip {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  background: color-mix(in oklab, var(--color-accent) 14%, transparent);
+  color: var(--color-accent);
+}
+
+.card-titles {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-text-0);
+}
+
+.card-hint {
+  font-size: 11px;
+  color: var(--color-text-3);
+}
+
+.card-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg-1);
+  box-shadow: var(--shadow-soft-sm);
+}
+
+.kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-2);
+}
+
+.kpi-chip {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--color-accent) 14%, transparent);
+  color: var(--color-accent);
+}
+
+.kpi-value {
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--color-text-0);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

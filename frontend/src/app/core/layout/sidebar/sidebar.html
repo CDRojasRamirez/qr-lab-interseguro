@@ -1,0 +1,66 @@
+<aside
+  id="app-sidebar"
+  class="sidebar"
+  [class.collapsed]="collapsed()"
+  [class.open]="mobileOpen()"
+  aria-label="Navegación principal"
+>
+  <div class="brand-row">
+    <a class="brand" routerLink="/qr" (click)="closeMobile.emit()">
+      <span class="mark"><lucide-icon [img]="icons.Sigma" [size]="18" /></span>
+      <span class="brand-text">
+        <span class="wordmark"><span class="wm-0">QR</span><span class="wm-1">Lab</span></span>
+        <span class="sublabel">Factorización</span>
+      </span>
+    </a>
+    <button class="btn btn-icon close" type="button" aria-label="Cerrar menú" (click)="closeMobile.emit()">
+      <lucide-icon [img]="icons.X" [size]="16" />
+    </button>
+  </div>
+
+  <nav class="nav">
+    <span class="micro-label section">Espacio de trabajo</span>
+    <a
+      class="nav-item"
+      routerLink="/qr"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ paths: 'exact', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' }"
+      [attr.title]="collapsed() ? 'Factorización QR' : null"
+      (click)="closeMobile.emit()"
+    >
+      <lucide-icon [img]="icons.Grid3x3" [size]="16" />
+      <span class="label">Factorización QR</span>
+    </a>
+  </nav>
+
+  <div class="foot">
+    <div class="user" [attr.title]="user()">
+      <span class="avatar">{{ user().charAt(0).toUpperCase() }}</span>
+      <span class="user-text">
+        <span class="user-name">{{ user() }}</span>
+        <span class="user-role">Sesión JWT</span>
+      </span>
+    </div>
+    <button
+      class="btn btn-ghost logout"
+      type="button"
+      [attr.aria-label]="collapsed() ? 'Cerrar sesión' : null"
+      (click)="logout.emit()"
+    >
+      <lucide-icon [img]="icons.LogOut" [size]="16" />
+      <span class="label">Cerrar sesión</span>
+    </button>
+  </div>
+
+  <button
+    class="edge"
+    type="button"
+    aria-controls="app-sidebar"
+    [attr.aria-expanded]="!collapsed()"
+    [attr.aria-label]="collapsed() ? 'Expandir menú' : 'Colapsar menú'"
+    (click)="toggleCollapse.emit()"
+  >
+    <lucide-icon [img]="icons.ChevronLeft" [size]="14" />
+  </button>
+</aside>

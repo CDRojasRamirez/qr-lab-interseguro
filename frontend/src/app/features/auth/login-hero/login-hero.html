@@ -1,0 +1,36 @@
+<section class="hero" aria-label="QR Lab">
+  <div class="hero-top">
+    <div class="brand">
+      <span class="mark"><lucide-icon [img]="icons.Sigma" [size]="18" /></span>
+      <span class="wm"><span class="wm-0">QR</span> <span class="wm-1">LAB</span></span>
+    </div>
+    <span
+      class="live"
+      role="status"
+      [class.ok]="apisOnline() === true"
+      [class.down]="apisOnline() === false"
+    >
+      <span class="dot" [class.ok]="apisOnline() === true" [class.down]="apisOnline() === false"></span>
+      {{ liveText() }}
+    </span>
+  </div>
+
+  <div class="lede">
+    <h1>Cada <span class="accent">rotación</span> cuenta.</h1>
+    <p>
+      Factoriza cualquier matriz rectangular en Q·R con rotaciones de Givens y obtén
+      estadísticas al instante.
+    </p>
+  </div>
+
+  <dl class="stats">
+    @for (s of stats; track s.key) {
+      <div class="stat">
+        <dt class="micro-label">{{ s.key }}</dt>
+        <dd class="num" [class.best]="s.accent">{{ s.value }}</dd>
+      </div>
+    }
+  </dl>
+
+  <footer class="hero-foot num">Go · Fiber &nbsp;·&nbsp; Node · Express &nbsp;·&nbsp; Angular 21</footer>
+</section>

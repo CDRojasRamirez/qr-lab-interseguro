@@ -1,0 +1,59 @@
+.layout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.span-12 {
+  grid-column: span 12;
+  min-width: 0;
+}
+
+.results {
+  display: grid;
+  gap: 12px;
+}
+
+.error-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.error-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-code {
+  border-color: color-mix(in oklab, var(--color-danger) 35%, transparent);
+  background: color-mix(in oklab, var(--color-danger) 10%, transparent);
+  color: var(--color-danger);
+}
+
+.details {
+  padding-left: 18px;
+  color: var(--color-text-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+@media (min-width: 1024px) {
+  .lg-5 {
+    grid-column: span 5;
+  }
+
+  .lg-7 {
+    grid-column: span 7;
+  }
+}
+
+@media (min-width: 1280px) {
+  .results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

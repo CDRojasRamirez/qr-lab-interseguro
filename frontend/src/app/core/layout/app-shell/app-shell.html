@@ -1,0 +1,30 @@
+<div class="shell" [class.is-collapsed]="collapsed()" [class.is-open]="mobileOpen()">
+  <app-sidebar
+    [collapsed]="collapsed()"
+    [mobileOpen]="mobileOpen()"
+    [user]="user()"
+    (toggleCollapse)="toggleCollapse()"
+    (closeMobile)="mobileOpen.set(false)"
+    (logout)="logout()"
+  />
+
+  @if (mobileOpen()) {
+    <div class="backdrop" aria-hidden="true" (click)="mobileOpen.set(false)"></div>
+  }
+
+  <div class="column">
+    <app-topbar
+      [statuses]="statuses()"
+      [theme]="theme()"
+      [user]="user()"
+      [menuOpen]="mobileOpen()"
+      (toggleTheme)="toggleTheme()"
+      (openMenu)="mobileOpen.set(true)"
+    />
+    <main id="main-content" class="main app-glow" tabindex="-1">
+      <div class="content animate-fade-in">
+        <router-outlet />
+      </div>
+    </main>
+  </div>
+</div>

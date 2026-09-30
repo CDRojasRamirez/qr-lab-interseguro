@@ -1,0 +1,38 @@
+<section class="card">
+  <header class="card-head">
+    <span class="card-chip"><lucide-icon [img]="icon()" [size]="16" /></span>
+    <div class="card-titles">
+      <h3 class="card-title">{{ label() }}</h3>
+      @if (hint(); as text) {
+        <span class="card-hint">{{ text }}</span>
+      }
+    </div>
+    @if (matrix()) {
+      <span class="chip card-actions">{{ rows() }}×{{ cols() }}</span>
+    }
+  </header>
+
+  @if (matrix(); as m) {
+    <div class="scroll">
+      <div class="bracket">
+        <table class="num" [attr.aria-label]="label()">
+          <tbody>
+            @for (row of m; track $index; let i = $index) {
+              <tr>
+                @for (value of row; track $index; let j = $index) {
+                  <td [class.diag]="i === j" [class.neg]="value < 0">{{ format(value) }}</td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  } @else {
+    <app-empty-state
+      title="Sin resultado todavía"
+      hint="Carga una matriz y presiona Calcular"
+      [icon]="icon()"
+    />
+  }
+</section>

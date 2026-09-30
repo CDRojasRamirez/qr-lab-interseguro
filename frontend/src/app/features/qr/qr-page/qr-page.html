@@ -1,0 +1,53 @@
+<app-page-header
+  title="Factorización QR"
+  subtitle="A = Q·R mediante rotaciones de Givens · estadísticas calculadas por la API de Node"
+/>
+
+<div class="layout">
+  <app-stats-kpis class="span-12" [stats]="result()?.statistics ?? null" [loading]="loading()" />
+
+  @if (error(); as err) {
+    <div class="alert alert-error span-12" role="alert">
+      <lucide-icon [img]="icons.CircleAlert" [size]="18" />
+      <div class="error-body">
+        <div class="error-title">
+          <strong>{{ err.message }}</strong>
+          <span class="chip error-code">{{ err.code }}</span>
+        </div>
+        @if (err.details.length > 0) {
+          <ul class="details">
+            @for (detail of err.details; track $index) {
+              <li>{{ detail }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+  }
+
+  <app-matrix-input class="span-12 lg-5" [disabled]="loading()" (matrixSubmit)="factorize($event)" />
+
+  <div class="results span-12 lg-7">
+    <app-matrix-view
+      label="Q · Ortogonal"
+      hint="Qᵀ·Q = I"
+      [icon]="icons.Grid3x3"
+      [matrix]="result()?.q ?? null"
+    />
+    <app-matrix-view
+      label="R · Triangular superior"
+      hint="Ceros debajo de la diagonal"
+      [icon]="icons.Triangle"
+      [matrix]="result()?.r ?? null"
+    />
+  </div>
+
+  <app-stats-panel class="span-12" [stats]="result()?.statistics ?? null" />
+
+  <app-api-status
+    class="span-12 lg-5"
+    [statuses]="apiStatus()"
+    [loading]="statusLoading()"
+    (refresh)="refreshStatus()"
+  />
+</div>

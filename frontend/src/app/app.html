@@ -1,0 +1,13 @@
+@if (configError(); as message) {
+  <div class="config-error">
+    <div class="alert alert-error" role="alert">
+      <lucide-icon [img]="icons.CircleAlert" [size]="18" />
+      <div>
+        <strong>No se pudo iniciar la aplicación</strong>
+        <p>{{ message }}</p>
+      </div>
+    </div>
+  </div>
+} @else {
+  <router-outlet />
+}

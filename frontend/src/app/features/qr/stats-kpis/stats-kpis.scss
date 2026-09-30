@@ -1,0 +1,33 @@
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  animation: rd-slide-up 280ms var(--ease-out) both;
+
+  .badge {
+    align-self: flex-start;
+    height: 28px;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+}
+
+.value-skeleton {
+  width: 70%;
+  height: 29px;
+}
+
+@media (min-width: 640px) {
+  .kpis {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kpis {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

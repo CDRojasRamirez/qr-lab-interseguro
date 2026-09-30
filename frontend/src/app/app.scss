@@ -1,0 +1,15 @@
+.config-error {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 16px;
+
+  .alert {
+    max-width: 520px;
+  }
+
+  p {
+    margin-top: 4px;
+    color: var(--color-text-1);
+  }
+}

@@ -1,0 +1,53 @@
+<section class="card" aria-labelledby="stats-title">
+  <header class="card-head">
+    <span class="card-chip"><lucide-icon [img]="icons.Table" [size]="16" /></span>
+    <div class="card-titles">
+      <h3 id="stats-title" class="card-title">Estadísticas por matriz</h3>
+      <span class="card-hint">Calculadas por la API de Node sobre Q y R</span>
+    </div>
+  </header>
+
+  @if (stats(); as s) {
+    <div class="table-wrap">
+      <table class="table">
+        <caption class="visually-hidden">
+          Estadísticas por matriz
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Matriz</th>
+            <th scope="col" class="is-num">Máx</th>
+            <th scope="col" class="is-num">Mín</th>
+            <th scope="col" class="is-num">Promedio</th>
+            <th scope="col" class="is-num">Suma</th>
+            <th scope="col" class="is-num">Elementos</th>
+            <th scope="col">Diagonal</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (m of s.perMatrix; track m.name) {
+            <tr>
+              <th scope="row"><span class="chip">{{ m.name }}</span></th>
+              <td class="is-num">{{ m.max | number: '1.0-4' }}</td>
+              <td class="is-num">{{ m.min | number: '1.0-4' }}</td>
+              <td class="is-num">{{ m.average | number: '1.0-4' }}</td>
+              <td class="is-num">{{ m.sum | number: '1.0-4' }}</td>
+              <td class="is-num">{{ m.count }}</td>
+              <td>
+                <span class="badge" [class.badge-success]="m.isDiagonal">
+                  {{ m.isDiagonal ? 'Sí' : 'No' }}
+                </span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-empty-state
+      title="Sin estadísticas todavía"
+      hint="Carga una matriz y presiona Calcular"
+      [icon]="icons.Table"
+    />
+  }
+</section>

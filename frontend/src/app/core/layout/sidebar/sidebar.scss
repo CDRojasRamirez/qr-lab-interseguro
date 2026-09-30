@@ -1,0 +1,188 @@
+:host {
+  display: contents;
+}
+
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(280px, 86vw);
+  padding: 14px 10px 12px;
+  background: var(--color-bg-1);
+  border-right: 1px solid var(--color-line);
+  box-shadow: var(--shadow-soft-lg);
+  transform: translateX(-100%);
+  transition:
+    transform 240ms var(--ease-out),
+    width 200ms var(--ease-out);
+
+  &.open {
+    transform: none;
+  }
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+}
+
+.mark {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-0);
+  color: var(--color-accent);
+  box-shadow: 0 4px 14px -4px color-mix(in oklab, var(--color-accent) 42%, transparent);
+}
+
+.brand-text,
+.user-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.wordmark {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.wm-0 {
+  color: var(--color-text-0);
+}
+
+.wm-1 {
+  color: var(--color-accent);
+}
+
+.sublabel {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-text-3);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.section {
+  padding: 6px 10px 4px;
+}
+
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-1);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 150ms var(--ease-out),
+    color 150ms var(--ease-out);
+
+  lucide-icon {
+    color: var(--color-text-2);
+  }
+
+  &:hover {
+    background: var(--color-bg-2);
+    color: var(--color-text-0);
+  }
+
+  &.active {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-accent) 12%, transparent),
+      var(--color-bg-2)
+    );
+    color: var(--color-text-0);
+
+    lucide-icon {
+      color: var(--color-accent);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: -10px;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--color-accent);
+      box-shadow: 0 4px 14px -4px color-mix(in oklab, var(--color-accent) 42%, transparent);
+    }
+  }
+}
+
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-line);
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border: 1px solid var(--color-line-2);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-2);
+}
+
+
+.user-name {
+  overflow: hidden;
+  font-size: 13px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  color: var(--color-text-0);
+}
+
+.user-role {
+  font-size: 11px;
+  color: var(--color-text-3);
+}
+
+.logout {
+  justify-content: flex-start;
+}
+
+.edge {
+  display: none;
+}

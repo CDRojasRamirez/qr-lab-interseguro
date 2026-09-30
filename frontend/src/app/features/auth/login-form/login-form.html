@@ -1,0 +1,77 @@
+<form class="login-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <div class="field">
+    <label class="label" for="username">Usuario</label>
+    <input
+      id="username"
+      class="input input-lg"
+      type="text"
+      formControlName="username"
+      autocomplete="username"
+      placeholder="admin"
+      [attr.aria-invalid]="form.controls.username.touched && form.controls.username.invalid"
+    />
+    @if (form.controls.username.touched && form.controls.username.invalid) {
+      <span class="field-error" role="alert">El usuario es obligatorio.</span>
+    }
+  </div>
+
+  <div class="field">
+    <label class="label" for="password">Contraseña</label>
+    <div class="password">
+      <input
+        id="password"
+        class="input input-lg"
+        formControlName="password"
+        autocomplete="current-password"
+        placeholder="••••••"
+        [type]="showPassword() ? 'text' : 'password'"
+        [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
+      />
+      <button
+        class="eye"
+        type="button"
+        aria-controls="password"
+        [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        [attr.aria-pressed]="showPassword()"
+        (click)="togglePassword()"
+      >
+        <lucide-icon [img]="showPassword() ? icons.EyeOff : icons.Eye" [size]="16" />
+      </button>
+    </div>
+    @if (form.controls.password.touched && form.controls.password.invalid) {
+      <span class="field-error" role="alert">La contraseña es obligatoria.</span>
+    }
+  </div>
+
+  @if (error(); as message) {
+    <p class="alert alert-error" role="alert">
+      <lucide-icon [img]="icons.CircleAlert" [size]="16" />
+      <span>{{ message }}</span>
+    </p>
+  }
+
+  <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="loading()">
+    @if (loading()) {
+      <lucide-icon [class.spin]="true" [img]="icons.Loader" [size]="16" />
+      Ingresando…
+    } @else {
+      Ingresar
+    }
+  </button>
+
+  @if (demoCredentials(); as demo) {
+    <section class="demo" aria-labelledby="demo-title">
+      <p class="micro-label demo-title" id="demo-title">
+        <lucide-icon [img]="icons.KeyRound" [size]="14" />
+        Credenciales de prueba
+      </p>
+      <dl class="demo-rows">
+        <div><dt>Usuario</dt><dd class="num">{{ demo.username }}</dd></div>
+        <div><dt>Contraseña</dt><dd class="num">{{ demo.password }}</dd></div>
+      </dl>
+      <button class="btn btn-secondary btn-block" type="button" (click)="fillDemo(demo)">
+        Usar credenciales de prueba
+      </button>
+    </section>
+  }
+</form>

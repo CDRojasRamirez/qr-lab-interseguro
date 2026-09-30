@@ -1,0 +1,73 @@
+// Desktop (>=1024px): sticky rail, collapsible to 64px with the edge button.
+@media (min-width: 1024px) {
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    width: var(--sidebar-w);
+    height: 100vh;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .edge {
+    position: absolute;
+    top: 22px;
+    right: -12px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: 50%;
+    background: var(--color-bg-2);
+    color: var(--color-text-2);
+    cursor: pointer;
+    transition:
+      color 150ms var(--ease-out),
+      border-color 150ms var(--ease-out),
+      transform 200ms var(--ease-out);
+
+    &:hover {
+      border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+      color: var(--color-accent);
+    }
+  }
+
+  .sidebar.collapsed {
+    width: var(--sidebar-w-collapsed);
+
+    .brand-text,
+    .label,
+    .section,
+    .user-text {
+      display: none;
+    }
+
+    .brand-row,
+    .user {
+      justify-content: center;
+    }
+
+    .nav-item,
+    .logout {
+      justify-content: center;
+      padding: 0;
+    }
+
+    .user {
+      padding: 6px 0;
+      border-color: transparent;
+      background: transparent;
+    }
+
+    .edge {
+      transform: rotate(180deg);
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+*.pem
+Dockerfile
+.dockerignore
+Makefile
+test/
+bin/
+*.test
+*.out
+coverage.txt

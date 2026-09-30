@@ -1,0 +1,33 @@
+# Rendered by the nginx image's envsubst step; only ${PORT} is defined in env,
+# so nginx variables such as $uri are left untouched.
+server {
+  listen ${PORT};
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  gzip on;
+  gzip_min_length 1024;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+
+  # Generated at container start from GO_API_URL / NODE_API_URL.
+  location = /config.json {
+    alias /tmp/config.json;
+    add_header Cache-Control "no-store";
+  }
+
+  # Also reached by the SPA fallback below, so deep links are never cached.
+  location = /index.html {
+    add_header Cache-Control "no-store";
+  }
+
+  # Angular hashes these filenames (outputHashing: all), so they are immutable.
+  location ~* \.(?:js|css)$ {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri =404;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}

@@ -1,0 +1,60 @@
+# Local stack. Keys must exist first: `make keys` (see README).
+services:
+  node-api:
+    build: ./node-api
+    ports:
+      - "${NODE_API_HOST_PORT:-3000}:3000"
+    environment:
+      PORT: "3000"
+      JWT_PUBLIC_KEY_PATH: /run/keys/public.pem
+      JWT_ISSUER: ${JWT_ISSUER:-qr-go-api}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-qr-challenge}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:4200,http://localhost:8080}
+    # Least privilege: Node only verifies, so it never sees the private key.
+    volumes:
+      - ./keys/public.pem:/run/keys/public.pem:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/health || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  # No healthcheck: distroless/static has no shell, wget or curl to run one.
+  # Readiness is verified from outside (GET :8080/health, see README).
+  go-api:
+    build: ./go-api
+    ports:
+      # Host port is configurable to avoid clashes with other local services.
+      - "${GO_API_HOST_PORT:-8080}:8080"
+    environment:
+      PORT: "8080"
+      STATS_API_URL: http://node-api:3000
+      JWT_PRIVATE_KEY_PATH: /run/keys/private.pem
+      JWT_ISSUER: ${JWT_ISSUER:-qr-go-api}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-qr-challenge}
+      AUTH_USERNAME: ${AUTH_USERNAME:-admin}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:-secret}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:4200,http://localhost:8080}
+    # Go signs tokens; it only needs the private key (public key is derived from it).
+    volumes:
+      - ./keys/private.pem:/run/keys/private.pem:ro
+    depends_on:
+      node-api:
+        condition: service_healthy
+
+  # Nginx serves the SPA; GO_API_URL / NODE_API_URL are read by the *browser*,
+  # so they point at the host-published ports, not at compose service names.
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_HOST_PORT:-4200}:8080"
+    environment:
+      PORT: "8080"
+      GO_API_URL: http://localhost:${GO_API_HOST_PORT:-8080}
+      NODE_API_URL: http://localhost:${NODE_API_HOST_PORT:-3000}
+      # Public demo hint on the login screen; mirrors the Go API credentials above.
+      DEMO_USERNAME: ${AUTH_USERNAME:-admin}
+      DEMO_PASSWORD: ${AUTH_PASSWORD:-secret}
+    depends_on:
+      - go-api

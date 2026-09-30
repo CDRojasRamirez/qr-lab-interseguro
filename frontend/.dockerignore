@@ -1,0 +1,10 @@
+node_modules
+dist
+.angular
+out-tsc
+.git
+.vscode
+.editorconfig
+Dockerfile
+.dockerignore
+*.md

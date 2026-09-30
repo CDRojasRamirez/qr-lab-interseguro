@@ -1,0 +1,187 @@
+openapi: 3.1.0
+info:
+  title: QR Challenge - Go API
+  version: 1.0.0
+  description: >
+    Public API. Issues RS256 JWTs and computes QR factorizations, delegating
+    statistics to the Node API (the Bearer token is forwarded).
+servers:
+  - url: http://localhost:8080
+paths:
+  /health:
+    get:
+      summary: Liveness probe
+      responses:
+        "200":
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+  /api/v1/auth/login:
+    post:
+      summary: Exchange credentials for an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/LoginRequest" }
+            example: { username: admin, password: secret }
+      responses:
+        "200":
+          description: Token issued
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/LoginResponse" }
+              example: { accessToken: eyJhbGciOiJSUzI1NiJ9..., tokenType: Bearer, expiresIn: 900 }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+  /api/v1/factorizations:
+    post:
+      summary: Compute the QR factorization of a matrix and its statistics
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FactorizeRequest" }
+            example: { matrix: [[1, 2], [3, 4], [5, 6]] }
+      responses:
+        "200":
+          description: Factorization computed
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FactorizeResponse" }
+        "400":
+          description: Invalid matrix (INVALID_MATRIX) or malformed body (VALIDATION_ERROR)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+              example:
+                error:
+                  code: INVALID_MATRIX
+                  message: invalid matrix
+                  details: ["matrix rows must all have the same length: row 1 has 1 columns, expected 2"]
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "413": { $ref: "#/components/responses/PayloadTooLarge" }
+        "502":
+          description: Statistics service unavailable (UPSTREAM_UNAVAILABLE) or rejected the request (UPSTREAM_REJECTED)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "504":
+          description: Statistics service timed out (UPSTREAM_TIMEOUT)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    ValidationError:
+      description: Malformed body or missing fields (VALIDATION_ERROR)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Missing, invalid or expired credentials (UNAUTHORIZED)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    PayloadTooLarge:
+      description: Body exceeds the size limit (PAYLOAD_TOO_LARGE)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    LoginRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username: { type: string }
+        password: { type: string, format: password }
+    LoginResponse:
+      type: object
+      required: [accessToken, tokenType, expiresIn]
+      properties:
+        accessToken: { type: string }
+        tokenType: { type: string, const: Bearer }
+        expiresIn: { type: integer, description: Lifetime in seconds, example: 900 }
+    Matrix:
+      type: array
+      minItems: 1
+      maxItems: 100
+      items:
+        type: array
+        minItems: 1
+        maxItems: 100
+        items: { type: number }
+    FactorizeRequest:
+      type: object
+      required: [matrix]
+      properties:
+        matrix: { $ref: "#/components/schemas/Matrix" }
+    Stats:
+      type: object
+      required: [max, min, average, sum, count]
+      properties:
+        max: { type: number }
+        min: { type: number }
+        average: { type: number }
+        sum: { type: number }
+        count: { type: integer }
+    MatrixStats:
+      allOf:
+        - $ref: "#/components/schemas/Stats"
+        - type: object
+          required: [name, isDiagonal]
+          properties:
+            name: { type: string, example: Q }
+            isDiagonal: { type: boolean }
+    Statistics:
+      type: object
+      required: [global, perMatrix, anyDiagonal]
+      properties:
+        global: { $ref: "#/components/schemas/Stats" }
+        perMatrix:
+          type: array
+          items: { $ref: "#/components/schemas/MatrixStats" }
+        anyDiagonal: { type: boolean }
+    FactorizeResponse:
+      type: object
+      required: [q, r, statistics]
+      properties:
+        q: { $ref: "#/components/schemas/Matrix" }
+        r: { $ref: "#/components/schemas/Matrix" }
+        statistics: { $ref: "#/components/schemas/Statistics" }
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code:
+              type: string
+              enum:
+                - INVALID_MATRIX
+                - VALIDATION_ERROR
+                - UNAUTHORIZED
+                - NOT_FOUND
+                - METHOD_NOT_ALLOWED
+                - PAYLOAD_TOO_LARGE
+                - UPSTREAM_UNAVAILABLE
+                - UPSTREAM_REJECTED
+                - UPSTREAM_TIMEOUT
+                - INTERNAL_ERROR
+            message: { type: string }
+            details:
+              type: array
+              items: { type: string }

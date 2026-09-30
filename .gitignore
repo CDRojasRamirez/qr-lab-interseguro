@@ -1,0 +1,29 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+keys/
+keys-prod/
+
+# Go
+*.exe
+*.test
+*.out
+coverage.txt
+bin/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
